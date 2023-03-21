@@ -34,7 +34,7 @@ def main():
         **args_to_dict(args, model_and_diffusion_defaults().keys())
     )
     model.load_state_dict(
-        dist_util.load_state_dict(args.model_path, map_location="cpu")
+        dist_util.load_state_dict(args.model_path, map_location="cpu"), strict=False
     )
     model.to(dist_util.dev())
     if args.use_fp16:
@@ -112,13 +112,35 @@ def main():
 
 def create_argparser():
     defaults = dict(
+        model_path="../models/opt009999.pt",
+        classifier_path="../models/model009999.pt",
         clip_denoised=True,
-        num_samples=10000,
-        batch_size=16,
-        use_ddim=False,
-        model_path="",
-        classifier_path="",
+        # model flags
+        attention_resolutions=[32, 16, 8],
+        class_cond=True,
+        image_size=64,
+        learn_sigma=True,
+        num_channels=256,
+        num_heads=4,
+        num_res_blocks=2,
+        resblock_updown=True,
+        use_fp16=True,
+        use_scale_shift_norm=True,
+        # classifier flags
+        # image_size=64,
+        classifier_attention_resolutions=[32, 16, 8],
+        classifier_depth=2,
+        classifier_width=64,
+        classifier_pool='attention',
+        classifier_resblock_updown=True,
+        classifier_use_scale_shift_norm=True,
         classifier_scale=1.0,
+        classifier_use_fp16=True,
+        # sample flags
+        num_samples=100,
+        batch_size=10,
+        use_ddim=True,
+        timestep_respacing='ddim25'
     )
     defaults.update(model_and_diffusion_defaults())
     defaults.update(classifier_defaults())

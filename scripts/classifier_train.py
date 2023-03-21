@@ -209,11 +209,11 @@ def create_argparser():
         anneal_lr=True,
         batch_size=32,
         microbatch=-1,
-        lr=3e-4,
+        lr=1e-3,
         log_interval=10,
         eval_interval=5,
         save_interval=1000,
-        weight_decay=0.0,
+        weight_decay=0.05,
         schedule_sampler="uniform",
         resume_checkpoint="",
         # classifier flags

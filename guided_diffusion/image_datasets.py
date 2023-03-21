@@ -105,7 +105,7 @@ class ImageDataset(Dataset):
         with bf.BlobFile(path, "rb") as f:
             pil_image = Image.open(f)
             pil_image.load()
-        pil_image = pil_image.convert("RGB")
+        pil_image = pil_image.convert("L")
 
         if self.random_crop:
             arr = random_crop_arr(pil_image, self.resolution)
@@ -120,7 +120,7 @@ class ImageDataset(Dataset):
         out_dict = {}
         if self.local_classes is not None:
             out_dict["y"] = np.array(self.local_classes[idx], dtype=np.int64)
-        return np.transpose(arr, [2, 0, 1]), out_dict
+        return arr.reshape(1, 64, 64), out_dict
 
 
 def center_crop_arr(pil_image, image_size):

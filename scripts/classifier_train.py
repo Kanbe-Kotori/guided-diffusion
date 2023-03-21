@@ -55,7 +55,7 @@ def main():
             )
 
     # Needed for creating correct EMAs and fp16 parameters.
-    dist_util.sync_params(model.parameters())
+    # dist_util.sync_params(model.parameters())
 
     mp_trainer = MixedPrecisionTrainer(
         model=model, use_fp16=args.classifier_use_fp16, initial_lg_loss_scale=16.0
@@ -201,20 +201,27 @@ def split_microbatches(microbatch, *args):
 
 def create_argparser():
     defaults = dict(
-        data_dir="",
-        val_data_dir="",
+        data_dir="../datasets/dataTrain",
+        val_data_dir="../datasets/dataTest",
         noised=True,
         iterations=150000,
         lr=3e-4,
-        weight_decay=0.0,
+        weight_decay=0.05,
         anneal_lr=False,
-        batch_size=4,
+        batch_size=64,
         microbatch=-1,
         schedule_sampler="uniform",
         resume_checkpoint="",
         log_interval=10,
         eval_interval=5,
         save_interval=10000,
+        image_size=64,
+        classifier_attention_resolutions=[32, 16, 8],
+        classifier_depth=2,
+        classifier_width=128,
+        classifier_pool='attention',
+        classifier_resblock_updown=True,
+        classifier_use_scale_shift_norm=True
     )
     defaults.update(classifier_and_diffusion_defaults())
     parser = argparse.ArgumentParser()
